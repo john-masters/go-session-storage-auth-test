@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go-session-storage-auth-test/db"
+	"go-session-storage-auth-test/routes"
 	"log"
 	"net/http"
 	"os"
@@ -23,8 +24,10 @@ func main() {
 	port := os.Getenv("PORT")
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "yo yo yo")
+		http.ServeFile(w, r, "index.html")
 	})
+
+	mux.Handle("/auth/", http.StripPrefix("/auth", routes.AuthRoutes()))
 
 	fmt.Printf("Server running on http://localhost:%v\n", port)
 
