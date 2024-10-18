@@ -19,7 +19,7 @@ func Init() {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			email TEXT NOT NULL,
 			password TEXT NOT NULL,
-			is_member BOOLEAN NOT NULL DEFAULT FALSE,
+			is_member BOOLEAN NOT NULL DEFAULT FALSE
 		);
 
 		CREATE TABLE sessions (
@@ -30,7 +30,7 @@ func Init() {
 	`)
 
 	if err != nil {
-		fmt.Println("Error creating table", err)
+		fmt.Println("Error creating table: ", err)
 		return
 	}
 
