@@ -23,7 +23,7 @@ func InsertUser(user *models.User) error {
 	}
 	defer db.Close()
 
-	insertUserSQL := "INSERT INTO users (email, password) VALUES ($1, $2, $3, $4);"
+	insertUserSQL := "INSERT INTO users (email, password) VALUES ($1, $2);"
 	statement, err := db.Prepare(insertUserSQL)
 	if err != nil {
 		return err
