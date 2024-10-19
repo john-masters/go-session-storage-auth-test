@@ -64,6 +64,19 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var sessionCount int
+	err = db.SelectSessionCountByUserId(userId, &sessionCount)
+
+	if err != nil {
+		fmt.Println("Error getting session count:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if sessionCount > 0 {
+		// delete session
+	}
+
 	err = db.InsertSession(userId)
 	if err != nil {
 		fmt.Println("Error creating session:", err)
