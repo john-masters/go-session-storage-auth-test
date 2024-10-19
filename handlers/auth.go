@@ -96,5 +96,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now().Add(time.Hour * 24),
 		Path:    "/",
 	})
-	http.Redirect(w, r, "/account", http.StatusSeeOther)
+	w.Header().Add("HX-Redirect", "/account")
+	w.WriteHeader(http.StatusCreated)
 }
