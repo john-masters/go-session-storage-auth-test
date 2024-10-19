@@ -64,7 +64,12 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: start session
+	err = db.InsertSession(userId)
+	if err != nil {
+		fmt.Println("Error creating session:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 	return
