@@ -23,10 +23,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
-	})
-
+	mux.Handle("/", routes.PageRoutes())
 	mux.Handle("/auth/", http.StripPrefix("/auth", routes.AuthRoutes()))
 
 	fmt.Printf("Server running on http://localhost:%v\n", port)
