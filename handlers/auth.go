@@ -52,15 +52,19 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.InsertUser(&models.User{
+	userId, err := db.InsertUser(&models.User{
 		Email:    email,
 		Password: string(hash),
 	})
-	if err != nil {
+
+	// userId will be 0 if error
+	if err != nil && userId != 0 {
 		fmt.Println("Error creating user:", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// TODO: start session
 
 	w.WriteHeader(http.StatusCreated)
 	return
