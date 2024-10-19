@@ -96,5 +96,5 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now().Add(time.Hour * 24),
 		Path:    "/",
 	})
-	http.Redirect(w, r, "/", http.StatusCreated)
+	http.Redirect(w, r, "/account", http.StatusCreated)
 }
