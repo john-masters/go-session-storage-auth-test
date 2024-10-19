@@ -5,6 +5,7 @@ import (
 	"go-session-storage-auth-test/db"
 	"go-session-storage-auth-test/models"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -82,13 +83,18 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = db.InsertSession(userId)
+	sessionId, err := db.InsertSession(userId)
 	if err != nil {
 		fmt.Println("Error creating session:", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	return
+	http.SetCookie(w, &http.Cookie{
+		Name:    "Session",
+		Value:   sessionId,
+		Expires: time.Now().Add(time.Hour * 24),
+		Path:    "/",
+	})
+	http.Redirect(w, r, "/", http.StatusCreated)
 }
