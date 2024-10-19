@@ -43,3 +43,24 @@ func InsertSession(userId int64) error {
 	}
 	return nil
 }
+
+func DeleteSessionByUserId(userId int64) error {
+	db, err := conn()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	deleteSessionSQL := "DELETE FROM sessions WHERE user_id = $1;"
+	statement, err := db.Prepare(deleteSessionSQL)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

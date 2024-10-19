@@ -74,7 +74,12 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if sessionCount > 0 {
-		// delete session
+		err = db.DeleteSessionByUserId(userId)
+		if err != nil {
+			fmt.Println("Error deleting existing user sessions:", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	err = db.InsertSession(userId)
