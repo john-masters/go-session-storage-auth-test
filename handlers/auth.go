@@ -30,7 +30,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Password is required")
 		return
 	}
-	fmt.Println("testing testing")
 
 	userCount, err := db.SelectUserCountByEmail(email)
 	if err != nil {
@@ -39,7 +38,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("user count", userCount)
 	if userCount > 0 {
 		fmt.Fprint(w, "An account with this email already exists")
 		w.WriteHeader(http.StatusNotAcceptable)
