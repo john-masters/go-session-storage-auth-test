@@ -19,7 +19,23 @@ func SelectSessionCountByUserId(userId int64) (int, error) {
 	return count, nil
 }
 
-func InsertSession(userId int64) (sessionId string, error error) {
+func SelectSessionCountById(session string) (int, error) {
+	db, err := conn()
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	var count int
+	err = db.QueryRow("SELECT COUNT(*) FROM sessions WHERE id = $1;", session).Scan(&count)
+
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func InsertSession(userId int64) (string, error) {
 	db, err := conn()
 	if err != nil {
 		return "", err
