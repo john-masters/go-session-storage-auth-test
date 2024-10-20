@@ -25,11 +25,9 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case email == "":
 		fmt.Fprint(w, "Email is required")
-		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	case password == "":
 		fmt.Fprint(w, "Password is required")
-		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 	fmt.Println("testing testing")
