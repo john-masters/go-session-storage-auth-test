@@ -68,8 +68,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var sessionCount int
-	err = db.SelectSessionCountByUserId(userId, &sessionCount)
+	sessionCount, err := db.SelectSessionCountByUserId(userId)
 
 	if err != nil {
 		fmt.Println("Error getting session count:", err)

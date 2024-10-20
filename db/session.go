@@ -4,18 +4,19 @@ import (
 	"go-session-storage-auth-test/utils"
 )
 
-func SelectSessionCountByUserId(userId int64, count *int) error {
+func SelectSessionCountByUserId(userId int64) (int, error) {
 	db, err := conn()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer db.Close()
 
+	var count int
 	err = db.QueryRow("SELECT COUNT(*) FROM sessions WHERE user_id = $1;", userId).Scan(&count)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return count, nil
 }
 
 func InsertSession(userId int64) (sessionId string, error error) {
