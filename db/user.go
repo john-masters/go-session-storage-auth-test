@@ -4,18 +4,20 @@ import (
 	"go-session-storage-auth-test/models"
 )
 
-func SelectUserCountByEmail(email string, count *int) error {
+func SelectUserCountByEmail(email string) (int, error) {
 	db, err := conn()
 	if err != nil {
-		return err
+		return 0, err
 	}
 	defer db.Close()
 
+	var count int
+
 	err = db.QueryRow("SELECT COUNT(*) FROM users WHERE email = $1;", email).Scan(&count)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return count, nil
 }
 
 func InsertUser(user *models.User) (userId int64, error error) {

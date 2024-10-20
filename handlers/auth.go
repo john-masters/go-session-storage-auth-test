@@ -25,23 +25,26 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case email == "":
 		fmt.Fprint(w, "Email is required")
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	case password == "":
 		fmt.Fprint(w, "Password is required")
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
+	fmt.Println("testing testing")
 
-	var userCount int
-
-	err = db.SelectUserCountByEmail(email, &userCount)
+	userCount, err := db.SelectUserCountByEmail(email)
 	if err != nil {
 		fmt.Println("Error getting user count:", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	fmt.Println("user count", userCount)
 	if userCount > 0 {
 		fmt.Fprint(w, "An account with this email already exists")
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
