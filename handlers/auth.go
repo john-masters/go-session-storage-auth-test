@@ -40,7 +40,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if userCount > 0 {
 		fmt.Fprint(w, "An account with this email already exists")
-		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
