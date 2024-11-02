@@ -15,7 +15,7 @@
     <h1>Go Auth</h1>
     <fieldset>
         <legend>Sign up</legend>
-        <form hx-post="/auth/sign-up">
+        <form hx-post="/auth/sign-up" hx-target="#response">
             <label for="email">Email:</label>
             <input name="email" id="email" type="email" required />
             <br>
@@ -25,6 +25,7 @@
             <button type="submit">
                 <span>Submit</span>
             </button>
+            <span id="response"></span>
         </form>
     </fieldset>
 </body>
