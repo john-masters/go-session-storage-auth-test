@@ -28,6 +28,9 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 
 		if sessionCount > 0 {
 			next(w, r)
+		} else {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
 		}
 	}
 }
