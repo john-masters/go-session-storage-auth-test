@@ -137,8 +137,38 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// successfully authenticated, add session and redirect
+	sessionCount, err := db.SelectSessionCountByUserId(int64(user.Id))
 
+	if err != nil {
+		fmt.Println("Error getting session count:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if sessionCount > 0 {
+		err = db.DeleteSessionByUserId(int64(user.Id))
+		if err != nil {
+			fmt.Println("Error deleting existing user sessions:", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
+	sessionId, err := db.InsertSession(int64(user.Id))
+	if err != nil {
+		fmt.Println("Error creating session:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "Session",
+		Value:   sessionId,
+		Expires: time.Now().Add(time.Hour * 24),
+		Path:    "/",
+	})
+	w.Header().Add("HX-Redirect", "/account")
+	w.WriteHeader(http.StatusCreated)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
