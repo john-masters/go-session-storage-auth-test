@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"go-session-storage-auth-test/db"
 	"go-session-storage-auth-test/models"
@@ -97,7 +98,48 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {}
+func Login(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Println("Error parsing form")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
+	switch {
+	case email == "":
+		fmt.Fprint(w, "Email is required")
+		return
+	case password == "":
+		fmt.Fprint(w, "Password is required")
+		return
+	}
+
+	var user models.User
+	err = db.SelectUserByEmail(email, &user)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Fprint(w, "Invalid email address or password")
+		} else {
+			fmt.Println("Database query error:", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		fmt.Fprint(w, "Invalid email address or password")
+		return
+	}
+
+	// successfully authenticated, add session and redirect
+
+}
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("Session")

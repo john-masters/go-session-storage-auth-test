@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"go-session-storage-auth-test/models"
 )
 
@@ -45,4 +46,27 @@ func InsertUser(user *models.User) (userId int64, error error) {
 	}
 
 	return userId, nil
+}
+
+func SelectUserByEmail(email string, user *models.User) error {
+	db, err := conn()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	err = db.QueryRow("SELECT id, email, password FROM users WHERE email = $1;", email).Scan(
+		&user.Id,
+		&user.Email,
+		&user.Password,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return sql.ErrNoRows
+		} else {
+			return err
+		}
+	}
+
+	return nil
 }
