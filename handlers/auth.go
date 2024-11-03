@@ -10,6 +10,30 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("Session")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			http.Error(w, "No session cookie found", http.StatusUnauthorized)
+			return
+		}
+		http.Error(w, "Failed to retrieve cookie", http.StatusInternalServerError)
+		return
+	}
+	fmt.Printf("Logging out, session cookie value: %s\n", cookie.Value)
+
+	// TODO: delete cookie from db
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "Session",
+		Value:   "",
+		Expires: time.Unix(0, 0),
+		Path:    "/",
+	})
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 func Signup(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
