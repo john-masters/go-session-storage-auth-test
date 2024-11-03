@@ -81,3 +81,24 @@ func DeleteSessionByUserId(userId int64) error {
 	}
 	return nil
 }
+
+func DeleteSessionById(id string) error {
+	db, err := conn()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	deleteSessionSQL := "DELETE FROM sessions WHERE id = $1;"
+	statement, err := db.Prepare(deleteSessionSQL)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

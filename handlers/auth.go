@@ -20,9 +20,13 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to retrieve cookie", http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("Logging out, session cookie value: %s\n", cookie.Value)
 
-	// TODO: delete cookie from db
+	err = db.DeleteSessionById(cookie.Value)
+	if err != nil {
+		fmt.Println("Error deleting user session:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	http.SetCookie(w, &http.Cookie{
 		Name:    "Session",
