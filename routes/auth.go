@@ -9,6 +9,7 @@ func AuthRoutes() *http.ServeMux {
 	router := http.NewServeMux()
 
 	router.HandleFunc("POST /signup", handlers.Signup)
+	router.HandleFunc("POST /login", handlers.Login)
 	router.HandleFunc("GET /logout", handlers.Logout)
 
 	return router

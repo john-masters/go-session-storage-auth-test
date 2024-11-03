@@ -10,34 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Logout(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("Session")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			http.Error(w, "No session cookie found", http.StatusUnauthorized)
-			return
-		}
-		http.Error(w, "Failed to retrieve cookie", http.StatusInternalServerError)
-		return
-	}
-
-	err = db.DeleteSessionById(cookie.Value)
-	if err != nil {
-		fmt.Println("Error deleting user session:", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:    "Session",
-		Value:   "",
-		Expires: time.Unix(0, 0),
-		Path:    "/",
-	})
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
 func Signup(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
@@ -123,4 +95,34 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	})
 	w.Header().Add("HX-Redirect", "/account")
 	w.WriteHeader(http.StatusCreated)
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("Session")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			http.Error(w, "No session cookie found", http.StatusUnauthorized)
+			return
+		}
+		http.Error(w, "Failed to retrieve cookie", http.StatusInternalServerError)
+		return
+	}
+
+	err = db.DeleteSessionById(cookie.Value)
+	if err != nil {
+		fmt.Println("Error deleting user session:", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "Session",
+		Value:   "",
+		Expires: time.Unix(0, 0),
+		Path:    "/",
+	})
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
