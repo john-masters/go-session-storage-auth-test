@@ -9,8 +9,9 @@ import (
 func PageRoutes() *http.ServeMux {
 	router := http.NewServeMux()
 
-	router.HandleFunc("GET /", handlers.Home)
-	router.HandleFunc("GET /account", middleware.RequireAuth(handlers.Account))
+	router.HandleFunc("GET /", handlers.HomePage)
+	router.HandleFunc("GET /signup", handlers.SignupPage)
+	router.HandleFunc("GET /account", middleware.RequireAuth(handlers.AccountPage))
 
 	return router
 }

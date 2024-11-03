@@ -14,8 +14,8 @@
 <body>
     <h1>Go Auth</h1>
     <fieldset>
-        <legend>Log in</legend>
-        <form hx-post="/auth/login" hx-target="#response">
+        <legend>Sign up</legend>
+        <form hx-post="/auth/signup" hx-target="#response">
             <label for="email">Email:</label>
             <input name="email" id="email" type="email" required />
             <br>
@@ -27,7 +27,7 @@
             </button>
             <span id="response"></span>
         </form>
-        <p>Don't have an account? <a href="/signup">Join now!</a></p>
+        <p>Already have an account? <a href="/">Log in!</a></p>
     </fieldset>
 </body>
 
